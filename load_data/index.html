@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<body>
+</body>
+<script src="//d3js.org/d3.v4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/underscore@1.13.1/underscore-umd-min.js"></script>
+<script>
+
+var chartWidth = 500
+var chartHeight = 500
+
+function getMax(c) {
+    var vs = _.map(c, (o => o[Object.keys(o)[1]]))
+    return Math.max(...vs)
+}
+
+d3.select("body").append("svg")
+.attr("width", chartWidth)
+.attr("height", chartHeight)
+d3.csv("/data/bar_data.csv", function(data) {
+    d3.select("svg")
+    .selectAll("rect")
+    .data(data)
+    .enter()
+    .append("g")
+    .append("rect")
+    .attr("y", chartHeight)
+    .attr("width", 50)
+    .attr("x", (value, index) =>
+        index * (chartWidth / data.length))
+    .attr("width", chartWidth / data.length)
+    .attr("height", 0)
+    .attr("fill", "green")
+    .on("mouseover", function(){
+          d3.select(this)
+            .transition()
+            .duration(100)
+            .style("fill", "orange");
+
+          // Get current event info
+          console.log(d3.event);
+          console.log(this)
+          
+          // Get x & y co-ordinates
+          console.log(d3.mouse(this));
+      })
+      .on("mouseout", function(){
+          d3.select(this)
+            .transition()
+            .duration(700)
+            .ease(d3.easeExp)
+            .style("fill", "green")
+      })
+    .attr("fill", "green")
+    .transition()
+    .duration(1000)
+    .attr("height", (value, index) => {
+        var v = value[Object.keys(value)[1]];
+        console.log(v, v * (chartHeight / getMax(data)));
+        return v * (chartHeight / getMax(data))
+    })
+    .attr("y", (value, index) => {
+        var v = value[Object.keys(value)[1]];
+        return chartHeight - (v * (chartHeight / getMax(data)))
+    })
+
+});
+console.log("hello")
+
+</script>

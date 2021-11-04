@@ -2,7 +2,7 @@
 var dataset = [5, 10, 15, 20, 25]
 
 // Sizing variables for our chart. These are saved as variables as they will be used in calculations.
-var chartWidth = 300x
+var chartWidth = 300
 var chartHeight = 100
 var padding = 5
 
